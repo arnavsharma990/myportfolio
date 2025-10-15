@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arnav Sharma | Frontend Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* --- Global Styles & Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+        :root {
+            --background-color: #ffffff;
+            --text-color: #1a1a1a;
+            --subtle-gray: #f5f5f7;
+            --dark-gray: #e0e0e0; /* Slightly darker for some sections */
+            --accent-color: #007aff;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important; /* Hide default cursor */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        section {
+            padding: 100px 8%;
+            transition: background-color 0.5s ease-in-out; /* Smooth background transitions */
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+        }
+
+        /* --- Custom Cursor --- */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            pointer-events: none; /* Allows clicks to pass through */
+            z-index: 9999;
+            opacity: 0.6;
+            
+            transition: width 0.2s ease-out, height 0.2s ease-out, opacity 0.2s ease-out;
+            mix-blend-mode: difference; /* Nice effect with text */
+        }
+        #custom-cursor.hover {
+            width: 40px;
+            height: 40px;
+            opacity: 0.4;
+        }
+
+
+        /* --- Loader --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--background-color);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000;
+            transition: opacity 0.75s ease, visibility 0.75s ease;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 4px solid var(--subtle-gray);
+            border-top-color: var(--text-color); border-radius: 50%;
+            animation: spin 1s ease-in-out infinite;
+        }
+        #quote {
+            margin-top: 2rem; font-size: 1rem; font-weight: 300;
+            color: #888; opacity: 0; animation: fadeIn 1s ease 0.5s forwards;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        #loader.hidden { opacity: 0; visibility: hidden; }
+
+        /* --- Header --- */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%;
+            z-index: 100;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        header.scrolled {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .logo {
+            font-size: 1.5rem; font-weight: 700;
+            text-decoration: none; color: var(--text-color);
+        }
+        .nav-links {
+            list-style: none; display: flex; gap: 2rem;
+        }
+        .nav-links a {
+            text-decoration: none; color: var(--text-color);
+            font-weight: 600; position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0; height: 2px; background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--accent-color); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- Main Content --- */
+        #main-content { opacity: 0; transition: opacity 1s ease-in-out; }
+        #main-content.visible { opacity: 1; }
+        
+        /* --- Hero Section --- */
+        #hero {
+            height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center;
+            padding: 0 2rem;
+            position: relative; /* Needed for particles */
+            overflow: hidden; /* Ensure particles don't overflow */
+            background-color: var(--background-color); /* Default */
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #hero .hero-text {
+            position: relative;
+            z-index: 2;
+            font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 700;
+        }
+        .typing-text { border-right: 0.15em solid var(--accent-color); animation: blink-caret .75s step-end infinite; }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--accent-color); } }
+        .scroll-down-indicator {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            font-size: 0.8rem; font-weight: 300; color: #aaa;
+            animation: bounce 2s infinite; z-index: 2;
+        }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-15px); } 60% { transform: translateX(-50%) translateY(-7px); } }
+
+        /* --- About Me Section --- */
+        #about { background-color: var(--subtle-gray); } /* Changed for scroll effect */
+        .about-content {
+            display: flex; align-items: center; justify-content: center;
+            gap: 4rem; max-width: 1100px; margin: 0 auto; flex-wrap: wrap;
+        }
+        .about-image {
+            width: 280px; height: 280px; border-radius: 50%;
+            object-fit: cover; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .about-text { flex: 1; min-width: 300px; }
+        .about-text h3 { font-size: 1.8rem; margin-bottom: 1rem; }
+        .about-text p { font-size: 1rem; line-height: 1.7; color: #555; }
+
+        /* --- Skills Section --- */
+        #skills { background-color: var(--background-color); } /* Changed for scroll effect */
+        .skills-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem; max-width: 900px; margin: 0 auto;
+        }
+        .skill-item {
+            background: var(--subtle-gray); padding: 1.5rem; border-radius: 10px; /* Adjusted background */
+            text-align: center; box-shadow: 0 5px 15px var(--shadow-color);
+            transition: transform 0.3s ease;
+        }
+        .skill-item:hover { transform: translateY(-5px); }
+        .skill-item svg { width: 50px; height: 50px; margin-bottom: 1rem; fill: var(--text-color); }
+        .skill-item p { font-weight: 600; }
+
+        /* --- Projects Section --- */
+        #projects { background-color: var(--subtle-gray); } /* Changed for scroll effect */
+        .project-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem; max-width: 1200px; margin: 0 auto;
+        }
+        .project-card {
+            background: var(--background-color); border-radius: 15px; overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px var(--shadow-color); }
+        .project-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+        .project-info { padding: 1.5rem; }
+        .project-info h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .project-info p { font-size: 0.95rem; line-height: 1.6; color: #666; margin-bottom: 1.5rem; }
+        .project-link { text-decoration: none; color: var(--accent-color); font-weight: 600; font-size: 0.9rem; transition: color 0.3s ease; }
+        .project-link:hover { color: var(--text-color); }
+        
+        /* --- Contact Section --- */
+        #contact { background-color: var(--background-color); } /* Changed for scroll effect */
+        .contact-content { text-align: center; max-width: 600px; margin: 0 auto; }
+        .contact-content p { font-size: 1.1rem; color: #555; margin-bottom: 2rem; }
+        .contact-links { display: flex; justify-content: center; gap: 1.5rem; }
+        .contact-links a { color: var(--text-color); text-decoration: none; }
+        .contact-links .fab, .contact-links .fas { font-size: 30px; transition: transform 0.3s ease, color 0.3s ease; } /* Using Font Awesome */
+        .contact-links a:hover .fab, .contact-links a:hover .fas { transform: scale(1.2); color: var(--accent-color); }
+
+        /* --- Footer --- */
+        footer { text-align: center; padding: 2rem; font-size: 0.9rem; color: #888; background-color: var(--subtle-gray); } /* Changed for scroll effect */
+        
+        /* --- Scroll Reveal Animation --- */
+        .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .reveal-on-scroll.visible { opacity: 1; transform: translateY(0px); }
+
+        /* --- Responsive Design --- */
+        .burger { display: none; cursor: none; } /* Cursor handled by JS */
+        .burger div { width: 25px; height: 3px; background-color: var(--text-color); margin: 5px; transition: all 0.3s ease; }
+
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                position: fixed; right: 0; top: 0; height: 100vh; width: 60%;
+                background-color: var(--background-color);
+                flex-direction: column; align-items: center; justify-content: center;
+                transform: translateX(100%);
+                transition: transform 0.5s ease-in-out;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            .nav-links.nav-active { transform: translateX(0%); }
+            .burger { display: block; }
+        }
+        
+        .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+        .toggle .line2 { opacity: 0; }
+        .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+
+    </style>
+</head>
+<body>
+
+    <div id="custom-cursor"></div>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p id="quote">"The best way to predict the future is to create it."</p>
+    </div>
+    
+    <header id="header">
+        <a href="#hero" class="logo" data-cursor-hover>Arnav</a>
+        <ul class="nav-links">
+            <li><a href="#about" data-cursor-hover>About</a></li>
+            <li><a href="#skills" data-cursor-hover>Skills</a></li>
+            <li><a href="#projects" data-cursor-hover>Projects</a></li>
+            <li><a href="#contact" data-cursor-hover>Contact</a></li>
+        </ul>
+        <div class="burger" data-cursor-hover>
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </header>
+
+    <div id="main-content">
+        <section id="hero">
+            <div id="particles-js"></div> <h1 class="hero-text">
+                <span class="typing-text"></span>
+            </h1>
+            <a href="#about" class="scroll-down-indicator" data-cursor-hover>Scroll Down</a>
+        </section>
+
+        <section id="about">
+            <div class="about-content reveal-on-scroll">
+                <img src="Arnav.jpeg" alt="Arnav Sharma" class="about-image">
+                <div class="about-text">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 1rem;">About Me</h2>
+                    <p>
+                        I am a passionate Frontend Developer and UI/UX expert dedicated to creating intuitive, beautiful, and highly functional web experiences. With a strong foundation in modern web technologies, I specialize in turning complex problems into elegant, user-centric designs. I thrive on bringing ideas to life through clean code and pixel-perfect execution. Let's build something amazing together.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title reveal-on-scroll">My Tech Stack</h2>
+            <div class="skills-grid reveal-on-scroll">
+                <div class="skill-item" data-cursor-hover><i class="fab fa-html5"></i><p>HTML5</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fab fa-css3-alt"></i><p>CSS3</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fab fa-js-square"></i><p>JavaScript</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fab fa-react"></i><p>FireBase</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fab fa-node-js"></i><p>Canva</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fab fa-git-alt"></i><p>Git/GitHub</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fas fa-terminal"></i><p>Api</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fab fa-figma"></i><p>Figma</p></div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-title reveal-on-scroll">My Projects</h2>
+            <div class="project-grid">
+                <div class="project-card reveal-on-scroll">
+                    
+                    <img src="Bioline.png" alt="Project 1 Image">
+                    <div class="project-info">
+                        <h3>BioLine - SIH Project</h3>
+                        <p>An AI-driven pipeline for eDNA analysis. Built for the Smart India Hackathon to revolutionize biodiversity monitoring using modern web technologies.</p>
+                        <a href="https://test-bioline.onrender.com/" class="project-link" data-cursor-hover>View Details &rarr;</a>
+                    </div>
+                </div>
+                <div class="project-card reveal-on-scroll">
+                    <img src="prohand.png" alt="Project 2 Image">
+                    <div class="project-info">
+                        <h3>Prosthetic Hand (Pro Hands)</h3>
+                        <p>An interactive web application using Google's MediaPipe library for real-time hand and finger tracking, enabling gesture-based controls.</p>
+                        <a href="https://pros-z.vercel.app/" class="project-link" data-cursor-hover>Try Live Demo &rarr;</a>
+                    </div>
+                </div>
+                <div class="project-card reveal-on-scroll">
+                    <img src="Takeitease.png" alt="Project 3 Image">
+                    <div class="project-info">
+                        <h3>Mental WellFare (TakeitEase)</h3>
+                        <p>A browser-based interaction system designed to help people identify and cure mental diseses</p>
+                        <a href="https://take-it-ease.vercel.app/home.html" class="project-link" data-cursor-hover>Explore The World &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact">
+            <div class="contact-content reveal-on-scroll">
+                <h2 class="section-title">Get In Touch</h2>
+                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of an amazing team. Feel free to reach out!</p>
+                <div class="contact-links">
+                    <a href="mailto:2006arnavsharma@gmail.com" target="_blank" title="Email" data-cursor-hover><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.linkedin.com/in/arnavsharma990/" target="_blank" title="LinkedIn" data-cursor-hover><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/arnavsharma990" target="_blank" title="GitHub" data-cursor-hover><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Arnav Sharma. Designed & Built with ❤️.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('main-content');
+            
+            // --- Loader Logic ---
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                    mainContent.classList.add('visible');
+                    setTimeout(type, 500);
+                }, 2000); 
+            });
+
+            // --- Header Scroll Effect ---
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            // --- Responsive Navigation (Burger Menu) ---
+            const burger = document.querySelector('.burger');
+            const nav = document.querySelector('.nav-links');
+            const navLinks = document.querySelectorAll('.nav-links li');
+
+            burger.addEventListener('click', () => {
+                nav.classList.toggle('nav-active');
+                burger.classList.toggle('toggle');
+            });
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (nav.classList.contains('nav-active')) {
+                        nav.classList.remove('nav-active');
+                        burger.classList.remove('toggle');
+                    }
+                });
+            });
+
+            // --- Typing Effect Logic ---
+            const typingTextSpan = document.querySelector(".typing-text");
+            const textArray = ["Arnav Sharma", "Frontend Developer", "UI & UX Expert"];
+            let textArrayIndex = 0;
+            let charIndex = 0;
+
+            function type() {
+                if (charIndex < textArray[textArrayIndex].length) {
+                    typingTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, 150);
+                } else {
+                    setTimeout(erase, 2000);
+                }
+            }
+
+            function erase() {
+                if (charIndex > 0) {
+                    typingTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex - 1);
+                    charIndex--;
+                    setTimeout(erase, 100);
+                } else {
+                    textArrayIndex = (textArrayIndex + 1) % textArray.length;
+                    setTimeout(type, 500);
+                }
+            }
+
+            // --- Scroll Reveal Animation Logic ---
+            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- UPDATED Custom Cursor Logic ---
+            const customCursor = document.getElementById('custom-cursor');
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            const speed = 0.2; // Increased from 0.1 for more responsiveness
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursor() {
+                // Linear interpolation for smooth follow
+                cursorX += (mouseX - cursorX) * speed;
+                cursorY += (mouseY - cursorY) * speed;
+                
+                // Use transform for performance. We subtract half the cursor's width/height (10px) to center it.
+                customCursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
+                
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Cursor hover effect
+            const hoverables = document.querySelectorAll('[data-cursor-hover]');
+            hoverables.forEach(el => {
+                el.addEventListener('mouseenter', () => customCursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => customCursor.classList.remove('hover'));
+            });
+
+            // --- Particles.js Configuration for Hero Section ---
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#cccccc" },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.5, "random": false },
+                    "size": { "value": 3, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#bbbbbb", "opacity": 0.4, "width": 1 },
+                    "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                    "modes": {
+                        "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                        "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
+                        "repulse": { "distance": 200, "duration": 0.4 },
+                        "push": { "particles_nb": 4 },
+                        "remove": { "particles_nb": 2 }
+                    }
+                },
+                "retina_detect": true
+            });
+        });
+    </script>
+</body>
+</html>
