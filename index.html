@@ -13,7 +13,6 @@
             --background-color: #ffffff;
             --text-color: #1a1a1a;
             --subtle-gray: #f5f5f7;
-            --dark-gray: #e0e0e0; /* Slightly darker for some sections */
             --accent-color: #007aff;
             --shadow-color: rgba(0, 0, 0, 0.08);
         }
@@ -22,7 +21,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none !important; /* Hide default cursor */
+            
+            cursor: none !important;/* Hide default cursor */
         }
 
         html {
@@ -41,7 +41,7 @@
         
         section {
             padding: 100px 8%;
-            transition: background-color 0.5s ease-in-out; /* Smooth background transitions */
+            transition: background-color 0.5s ease-in-out;
         }
 
         .section-title {
@@ -58,21 +58,19 @@
             left: 0;
             width: 20px;
             height: 20px;
-            background-color: var(--accent-color);
+            background-color: #8c8a8a;
             border-radius: 50%;
-            pointer-events: none; /* Allows clicks to pass through */
+            pointer-events: none;
             z-index: 9999;
-            opacity: 0.6;
-            
+            opacity: 0.7;
             transition: width 0.2s ease-out, height 0.2s ease-out, opacity 0.2s ease-out;
-            mix-blend-mode: difference; /* Nice effect with text */
+            mix-blend-mode: difference;
         }
         #custom-cursor.hover {
             width: 40px;
             height: 40px;
-            opacity: 0.4;
+            opacity: 0.3;
         }
-
 
         /* --- Loader --- */
         #loader {
@@ -137,35 +135,63 @@
         /* --- Hero Section --- */
         #hero {
             height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center;
-            padding: 0 2rem;
-            position: relative; /* Needed for particles */
-            overflow: hidden; /* Ensure particles don't overflow */
-            background-color: var(--background-color); /* Default */
+            padding: 0 2rem; position: relative; overflow: hidden;
+            background-color: var(--background-color);
         }
         #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1;
         }
         #hero .hero-text {
-            position: relative;
-            z-index: 2;
+            position: relative; z-index: 2;
             font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 700;
         }
         .typing-text { border-right: 0.15em solid var(--accent-color); animation: blink-caret .75s step-end infinite; }
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--accent-color); } }
+        
+        /* NEW: Styles for mouse scroll indicator */
         .scroll-down-indicator {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            font-size: 0.8rem; font-weight: 300; color: #aaa;
-            animation: bounce 2s infinite; z-index: 2;
+            position: absolute; bottom: 30px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #aaa;
         }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-15px); } 60% { transform: translateX(-50%) translateY(-7px); } }
+        .mouse-icon {
+            width: 24px;
+            height: 40px;
+            border: 2px solid #aaa;
+            border-radius: 20px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .mouse-icon .wheel {
+            width: 4px;
+            height: 8px;
+            background: #aaa;
+            border-radius: 2px;
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scroll-anim 2s infinite;
+        }
+        @keyframes scroll-anim {
+            0% { top: 8px; opacity: 1; }
+            50% { top: 20px; opacity: 1; }
+            100% { top: 20px; opacity: 0; }
+        }
+        .scroll-down-indicator span {
+            font-size: 0.75rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         /* --- About Me Section --- */
-        #about { background-color: var(--subtle-gray); } /* Changed for scroll effect */
+        #about { background-color: var(--subtle-gray); }
         .about-content {
             display: flex; align-items: center; justify-content: center;
             gap: 4rem; max-width: 1100px; margin: 0 auto; flex-wrap: wrap;
@@ -179,22 +205,22 @@
         .about-text p { font-size: 1rem; line-height: 1.7; color: #555; }
 
         /* --- Skills Section --- */
-        #skills { background-color: var(--background-color); } /* Changed for scroll effect */
+        #skills { background-color: var(--background-color); }
         .skills-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 1.5rem; max-width: 900px; margin: 0 auto;
         }
         .skill-item {
-            background: var(--subtle-gray); padding: 1.5rem; border-radius: 10px; /* Adjusted background */
+            background: var(--subtle-gray); padding: 1.5rem; border-radius: 10px;
             text-align: center; box-shadow: 0 5px 15px var(--shadow-color);
             transition: transform 0.3s ease;
         }
         .skill-item:hover { transform: translateY(-5px); }
-        .skill-item svg { width: 50px; height: 50px; margin-bottom: 1rem; fill: var(--text-color); }
+        .skill-item .fab, .skill-item .fas { font-size: 50px; margin-bottom: 1rem; color: var(--text-color); }
         .skill-item p { font-weight: 600; }
 
         /* --- Projects Section --- */
-        #projects { background-color: var(--subtle-gray); } /* Changed for scroll effect */
+        #projects { background-color: var(--subtle-gray); }
         .project-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem; max-width: 1200px; margin: 0 auto;
@@ -213,23 +239,23 @@
         .project-link:hover { color: var(--text-color); }
         
         /* --- Contact Section --- */
-        #contact { background-color: var(--background-color); } /* Changed for scroll effect */
+        #contact { background-color: var(--background-color); }
         .contact-content { text-align: center; max-width: 600px; margin: 0 auto; }
         .contact-content p { font-size: 1.1rem; color: #555; margin-bottom: 2rem; }
         .contact-links { display: flex; justify-content: center; gap: 1.5rem; }
         .contact-links a { color: var(--text-color); text-decoration: none; }
-        .contact-links .fab, .contact-links .fas { font-size: 30px; transition: transform 0.3s ease, color 0.3s ease; } /* Using Font Awesome */
+        .contact-links .fab, .contact-links .fas { font-size: 30px; transition: transform 0.3s ease, color 0.3s ease; }
         .contact-links a:hover .fab, .contact-links a:hover .fas { transform: scale(1.2); color: var(--accent-color); }
 
         /* --- Footer --- */
-        footer { text-align: center; padding: 2rem; font-size: 0.9rem; color: #888; background-color: var(--subtle-gray); } /* Changed for scroll effect */
+        footer { text-align: center; padding: 2rem; font-size: 0.9rem; color: #888; background-color: var(--subtle-gray); }
         
         /* --- Scroll Reveal Animation --- */
         .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .reveal-on-scroll.visible { opacity: 1; transform: translateY(0px); }
 
         /* --- Responsive Design --- */
-        .burger { display: none; cursor: none; } /* Cursor handled by JS */
+        .burger { display: none; cursor: none; }
         .burger div { width: 25px; height: 3px; background-color: var(--text-color); margin: 5px; transition: all 0.3s ease; }
 
         @media screen and (max-width: 768px) {
@@ -248,7 +274,6 @@
         .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
         .toggle .line2 { opacity: 0; }
         .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
-
     </style>
 </head>
 <body>
@@ -277,10 +302,16 @@
 
     <div id="main-content">
         <section id="hero">
-            <div id="particles-js"></div> <h1 class="hero-text">
+            <div id="particles-js"></div>
+            <h1 class="hero-text">
                 <span class="typing-text"></span>
             </h1>
-            <a href="#about" class="scroll-down-indicator" data-cursor-hover>Scroll Down</a>
+            <a href="#about" class="scroll-down-indicator" data-cursor-hover>
+                <div class="mouse-icon">
+                    <div class="wheel"></div>
+                </div>
+                <span>Scroll Down</span>
+            </a>
         </section>
 
         <section id="about">
@@ -301,10 +332,10 @@
                 <div class="skill-item" data-cursor-hover><i class="fab fa-html5"></i><p>HTML5</p></div>
                 <div class="skill-item" data-cursor-hover><i class="fab fa-css3-alt"></i><p>CSS3</p></div>
                 <div class="skill-item" data-cursor-hover><i class="fab fa-js-square"></i><p>JavaScript</p></div>
-                <div class="skill-item" data-cursor-hover><i class="fab fa-react"></i><p>FireBase</p></div>
-                <div class="skill-item" data-cursor-hover><i class="fab fa-node-js"></i><p>Canva</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fas fa-fire"></i><p>FireBase</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fas fa-palette"></i><p>Canva</p></div>
                 <div class="skill-item" data-cursor-hover><i class="fab fa-git-alt"></i><p>Git/GitHub</p></div>
-                <div class="skill-item" data-cursor-hover><i class="fas fa-terminal"></i><p>Api</p></div>
+                <div class="skill-item" data-cursor-hover><i class="fas fa-cogs"></i><p>API</p></div>
                 <div class="skill-item" data-cursor-hover><i class="fab fa-figma"></i><p>Figma</p></div>
             </div>
         </section>
@@ -313,7 +344,6 @@
             <h2 class="section-title reveal-on-scroll">My Projects</h2>
             <div class="project-grid">
                 <div class="project-card reveal-on-scroll">
-                    
                     <img src="Bioline.png" alt="Project 1 Image">
                     <div class="project-info">
                         <h3>BioLine - SIH Project</h3>
@@ -358,7 +388,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const loader = document.getElementById('loader');
@@ -366,11 +395,12 @@
             
             // --- Loader Logic ---
             window.addEventListener('load', () => {
+                // CHANGED: Adjusted delay to 1200ms for a more balanced feel
                 setTimeout(() => {
                     loader.classList.add('hidden');
                     mainContent.classList.add('visible');
                     setTimeout(type, 500);
-                }, 2000); 
+                }, 1200); 
             });
 
             // --- Header Scroll Effect ---
@@ -446,11 +476,11 @@
                 observer.observe(el);
             });
 
-            // --- UPDATED Custom Cursor Logic ---
+            // --- Custom Cursor Logic ---
             const customCursor = document.getElementById('custom-cursor');
             let mouseX = 0, mouseY = 0;
             let cursorX = 0, cursorY = 0;
-            const speed = 0.2; // Increased from 0.1 for more responsiveness
+            const speed = 0.2; 
 
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
@@ -458,18 +488,13 @@
             });
 
             function animateCursor() {
-                // Linear interpolation for smooth follow
                 cursorX += (mouseX - cursorX) * speed;
                 cursorY += (mouseY - cursorY) * speed;
-                
-                // Use transform for performance. We subtract half the cursor's width/height (10px) to center it.
                 customCursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
-                
                 requestAnimationFrame(animateCursor);
             }
             animateCursor();
 
-            // Cursor hover effect
             const hoverables = document.querySelectorAll('[data-cursor-hover]');
             hoverables.forEach(el => {
                 el.addEventListener('mouseenter', () => customCursor.classList.add('hover'));
